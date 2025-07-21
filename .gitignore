@@ -11,9 +11,7 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Model files (large files) - exclude all models but keep directory structure
-*.h5
 *.pkl
-models/*.h5
 models/*.pkl
 !models/README.md
 
