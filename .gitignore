@@ -10,11 +10,6 @@ __pycache__/
 # Jupyter Notebooks checkpoints
 .ipynb_checkpoints/
 
-# Model files (large files) - exclude all models but keep directory structure
-*.pkl
-models/*.pkl
-!models/README.md
-
 # Dataset files (large) - user will add their own
 datasets/
 *_binary_dataset/
