@@ -1,0 +1,7 @@
+# Static Files Directory
+
+This directory is used for:
+- Temporarily storing uploaded X-ray images
+- Static assets (CSS, JS, images)
+
+Files in this directory are automatically cleaned up after processing.

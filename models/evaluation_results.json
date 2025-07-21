@@ -1,0 +1,19 @@
+{
+  "test_accuracy": 0.5461417436599731,
+  "test_precision": 0.5369635820388794,
+  "test_recall": 0.9046172499656677,
+  "test_auc": 0.6635649800300598,
+  "sensitivity": 0.9046172539489672,
+  "specificity": 0.16023544800523218,
+  "ppv": 0.5369635773530472,
+  "npv": 0.6094527363184079,
+  "confusion_matrix": {
+    "tn": 245,
+    "fp": 1284,
+    "fn": 157,
+    "tp": 1489
+  },
+  "total_test_samples": 3175,
+  "grade": "\u274c POOR (<75%)",
+  "clinical_status": "\u2705 GOOD FOR SCREENING - Good pneumonia detection"
+}

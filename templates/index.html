@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI X-Ray Pneumonia Classifier</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+            text-align: left;
+        }
+
+        .upload-panel {
+            text-align: center;
+        }
+
+        .info-panel {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .info-section h3 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-section p, .info-section li {
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .info-section ul {
+            padding-left: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+
+        .tab.active {
+            background: #3498db;
+            color: white;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .severity-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .severity-low {
+            background: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid #2ecc71;
+        }
+
+        .severity-medium {
+            background: rgba(241, 196, 15, 0.1);
+            border-left: 4px solid #f1c40f;
+        }
+
+        .severity-high {
+            background: rgba(231, 76, 60, 0.1);
+            border-left: 4px solid #e74c3c;
+        }
+
+        .sample-images {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .sample-image {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .sample-image img {
+            width: 100%;
+            max-width: 150px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .disclaimer {
+            background: rgba(231, 76, 60, 0.1);
+            border: 2px solid #e74c3c;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .disclaimer h4 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #bdc3c7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 10px;
+            z-index: 2;
+        }
+
+        .step.active .step-circle {
+            background: #3498db;
+        }
+
+        .step.completed .step-circle {
+            background: #2ecc71;
+        }
+
+        .step-line {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background: #bdc3c7;
+            z-index: 1;
+        }
+
+        .step:last-child .step-line {
+            display: none;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .medical-icon {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        .upload-section {
+            margin: 40px 0;
+        }
+
+        .upload-area {
+            border: 3px dashed #bdc3c7;
+            border-radius: 15px;
+            padding: 40px 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover {
+            border-color: #3498db;
+            background: #e3f2fd;
+            transform: translateY(-2px);
+        }
+
+        .upload-area.dragover {
+            border-color: #2ecc71;
+            background: #e8f5e8;
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: #95a5a6;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover .upload-icon {
+            color: #3498db;
+            transform: scale(1.1);
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        #file {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            margin: 20px 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .preview-section {
+            margin: 30px 0;
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .result-section {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .result-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .result-prediction {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+
+        .result-confidence {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .normal {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+
+        .pneumonia {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .upload-area {
+                padding: 30px 15px;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sample-images {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-steps {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .step-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-user-md medical-icon"></i>
+            <h1>AI X-Ray Classifier</h1>
+            <p>Advanced pneumonia detection using artificial intelligence</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Upload Panel -->
+            <div class="upload-panel">
+                <div class="progress-steps">
+                    <div class="step active" id="step1">
+                        <div class="step-circle">1</div>
+                        <div class="step-line"></div>
+                        <span>Upload</span>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-circle">2</div>
+                        <div class="step-line"></div>
+                        <span>Analyze</span>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-circle">3</div>
+                        <span>Results</span>
+                    </div>
+                </div>
+
+                <div class="upload-section">
+                    <div class="upload-area" id="upload-area">
+                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                        <div class="upload-text">Drag & drop your X-ray image here</div>
+                        <div class="upload-subtext">or click to browse (PNG, JPG, JPEG - Max 5MB)</div>
+                        <input type="file" id="file" accept="image/*" required>
+                    </div>
+                </div>
+
+                <div class="preview-section" id="preview-section">
+                    <img id="preview-image" class="preview-image" alt="Preview">
+                    <div>
+                        <button type="button" class="btn" id="predict-btn">
+                            <i class="fas fa-brain"></i> Analyze X-Ray
+                        </button>
+                        <button type="button" class="btn" id="clear-btn" style="background: linear-gradient(45deg, #e74c3c, #c0392b);">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing X-ray image with AI...</p>
+                </div>
+
+                <div class="error-message" id="error-message"></div>
+
+                <div class="result-section" id="result-section">
+                    <div class="result-card" id="result-card">
+                        <div class="result-title">
+                            <i class="fas fa-chart-line"></i> Analysis Result
+                        </div>
+                        <div class="result-prediction" id="result-prediction"></div>
+                        <div class="result-confidence" id="result-confidence"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Panel -->
+            <div class="info-panel">
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('about')">
+                        <i class="fas fa-info-circle"></i> About
+                    </button>
+                    <button class="tab" onclick="showTab('symptoms')">
+                        <i class="fas fa-lungs"></i> Symptoms
+                    </button>
+                    <button class="tab" onclick="showTab('prevention')">
+                        <i class="fas fa-shield-alt"></i> Prevention
+                    </button>
+                </div>
+
+                <!-- About Tab -->
+                <div id="about" class="tab-content active">
+                    <div class="info-section">
+                        <h3><i class="fas fa-disease"></i> What is Pneumonia?</h3>
+                        <p>Pneumonia is an infection that inflames air sacs in one or both lungs. The air sacs may fill with fluid or pus, causing cough with phlegm or pus, fever, chills, and difficulty breathing.</p>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">2.6M</div>
+                                <div class="stat-label">Deaths annually worldwide</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">450M</div>
+                                <div class="stat-label">People affected yearly</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-virus"></i> Types of Pneumonia</h3>
+                        <ul>
+                            <li><strong>Bacterial:</strong> Most common type, often caused by Streptococcus pneumoniae</li>
+                            <li><strong>Viral:</strong> Caused by viruses like influenza or COVID-19</li>
+                            <li><strong>Fungal:</strong> Less common, affects people with weakened immune systems</li>
+                            <li><strong>Aspiration:</strong> Caused by inhaling food, drink, or saliva</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-x-ray"></i> How AI Helps</h3>
+                        <p>Our AI model analyzes chest X-rays to detect signs of pneumonia by identifying:</p>
+                        <ul>
+                            <li>Lung opacity and consolidation patterns</li>
+                            <li>Inflammatory changes in lung tissue</li>
+                            <li>Fluid accumulation in air sacs</li>
+                            <li>Abnormal density variations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Symptoms Tab -->
+                <div id="symptoms" class="tab-content">
+                    <div class="info-section">
+                        <h3><i class="fas fa-thermometer-half"></i> Common Symptoms</h3>
+                        
+                        <div class="severity-indicator severity-high">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <strong>Severe Symptoms (Seek immediate care):</strong>
+                                <p>High fever (>101.3°F), severe chest pain, difficulty breathing, rapid heartbeat</p>
+                            </div>
+                        </div>
+
+                        <div class="severity-indicator severity-medium">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <div>
+                                <strong>Moderate Symptoms:</strong>
+                                <p>Persistent cough with phlegm, fatigue, sweating, shaking chills</p>
+                            </div>
+                        </div>
+
+                        <div class="severity-indicator severity-low">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <strong>Mild Symptoms:</strong>
+                                <p>Slight cough, mild fever, headache, muscle aches</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-users"></i> Risk Groups</h3>
+                        <ul>
+                            <li>Adults over 65 years old</li>
+                            <li>Children under 2 years old</li>
+                            <li>People with chronic conditions (asthma, COPD, heart disease)</li>
+                            <li>Immunocompromised individuals</li>
+                            <li>Smokers and heavy alcohol users</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-clock"></i> When to Seek Help</h3>
+                        <p><strong>Call emergency services if you experience:</strong></p>
+                        <ul>
+                            <li>Severe difficulty breathing or shortness of breath</li>
+                            <li>Chest pain that worsens when breathing or coughing</li>
+                            <li>High fever with chills and sweating</li>
+                            <li>Confusion or changes in mental awareness</li>
+                            <li>Bluish lips or fingernails (cyanosis)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Prevention Tab -->
+                <div id="prevention" class="tab-content">
+                    <div class="info-section">
+                        <h3><i class="fas fa-syringe"></i> Vaccination</h3>
+                        <p><strong>Get vaccinated against:</strong></p>
+                        <ul>
+                            <li>Pneumococcal pneumonia (recommended for adults 65+)</li>
+                            <li>Influenza (annual vaccination)</li>
+                            <li>COVID-19 (including boosters)</li>
+                            <li>Haemophilus influenzae type b (Hib)</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-hands-wash"></i> Hygiene Practices</h3>
+                        <ul>
+                            <li>Wash hands frequently with soap and water</li>
+                            <li>Use alcohol-based hand sanitizer</li>
+                            <li>Cover coughs and sneezes</li>
+                            <li>Avoid touching face with unwashed hands</li>
+                            <li>Clean and disinfect frequently touched surfaces</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-heart"></i> Healthy Lifestyle</h3>
+                        <ul>
+                            <li>Don't smoke and avoid secondhand smoke</li>
+                            <li>Eat a balanced diet rich in fruits and vegetables</li>
+                            <li>Exercise regularly to boost immune system</li>
+                            <li>Get adequate sleep (7-9 hours for adults)</li>
+                            <li>Manage chronic conditions effectively</li>
+                            <li>Limit alcohol consumption</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-home"></i> Environmental Factors</h3>
+                        <ul>
+                            <li>Ensure good ventilation in living spaces</li>
+                            <li>Avoid crowded places during flu season</li>
+                            <li>Maintain humidity levels between 30-50%</li>
+                            <li>Keep living areas clean and dust-free</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <h4><i class="fas fa-exclamation-triangle"></i> Important Medical Disclaimer</h4>
+            <p>This AI tool is for educational and screening purposes only. It should not replace professional medical diagnosis or treatment. Always consult with qualified healthcare professionals for proper medical evaluation and care. If you're experiencing symptoms, seek immediate medical attention.</p>
+        </div>
+
+        <div class="footer">
+            <p><i class="fas fa-info-circle"></i> Powered by advanced deep learning algorithms trained on thousands of chest X-ray images.</p>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching function
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Update progress steps
+        function updateProgress(step) {
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((stepEl, index) => {
+                stepEl.classList.remove('active', 'completed');
+                if (index < step - 1) {
+                    stepEl.classList.add('completed');
+                } else if (index === step - 1) {
+                    stepEl.classList.add('active');
+                }
+            });
+        }
+
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file');
+        const previewSection = document.getElementById('preview-section');
+        const previewImage = document.getElementById('preview-image');
+        const predictBtn = document.getElementById('predict-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('error-message');
+        const resultSection = document.getElementById('result-section');
+        const resultCard = document.getElementById('result-card');
+        const resultPrediction = document.getElementById('result-prediction');
+        const resultConfidence = document.getElementById('result-confidence');
+
+        // Upload area click handler
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        // Drag and drop handlers
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // File input change handler
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // Handle file selection
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showError('Please select a valid image file.');
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                showError('File size must be less than 5MB.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                previewSection.style.display = 'block';
+                updateProgress(2);
+                hideError();
+                hideResult();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Predict button handler
+        predictBtn.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            if (!file) {
+                showError('Please select an image first.');
+                return;
+            }
+
+            showLoading();
+            hideError();
+            hideResult();
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                hideLoading();
+
+                if (response.ok) {
+                    updateProgress(3);
+                    showResult(result);
+                } else {
+                    showError(result.error || 'An error occurred during prediction.');
+                }
+            } catch (error) {
+                hideLoading();
+                showError('Network error. Please try again.');
+            }
+        });
+
+        // Clear button handler
+        clearBtn.addEventListener('click', () => {
+            fileInput.value = '';
+            previewSection.style.display = 'none';
+            updateProgress(1);
+            hideError();
+            hideResult();
+            hideLoading();
+        });
+
+        // Show loading state
+        function showLoading() {
+            loading.style.display = 'block';
+            predictBtn.disabled = true;
+        }
+
+        // Hide loading state
+        function hideLoading() {
+            loading.style.display = 'none';
+            predictBtn.disabled = false;
+        }
+
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // Hide error message
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // Show result
+        function showResult(result) {
+            const isNormal = result.prediction.toLowerCase() === 'normal';
+            const confidence = Math.round(result.confidence * 100);
+            
+            resultPrediction.innerHTML = `<i class="fas fa-${isNormal ? 'check-circle' : 'exclamation-triangle'}"></i> ${result.prediction}`;
+            resultConfidence.textContent = `Confidence: ${confidence}%`;
+            
+            // Add model status indicator
+            if (result.model_status === 'dummy') {
+                resultConfidence.innerHTML += `<br><small style="color: orange;"><i class="fas fa-exclamation-circle"></i> Using test model - results are not medically accurate</small>`;
+            } else {
+                resultConfidence.innerHTML += `<br><small style="color: green;"><i class="fas fa-check-circle"></i> Using trained AI model</small>`;
+            }
+            
+            resultCard.className = `result-card ${isNormal ? 'normal' : 'pneumonia'}`;
+            resultSection.style.display = 'block';
+        }
+
+        // Hide result
+        function hideResult() {
+            resultSection.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

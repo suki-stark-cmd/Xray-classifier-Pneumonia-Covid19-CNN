@@ -1,0 +1,44 @@
+{
+  "model_info": {
+    "architecture": "EfficientNetB3",
+    "parameters": 11217712,
+    "training_samples": 13757,
+    "test_samples": 3175
+  },
+  "performance": {
+    "test_accuracy": 0.5461,
+    "sensitivity": 0.9046,
+    "specificity": 0.1602,
+    "auc": 0.6636,
+    "recommended_threshold": 0.4
+  },
+  "deployment_config": {
+    "model_path": "models/pneumonia_detector_complete.h5",
+    "input_size": [
+      224,
+      224,
+      3
+    ],
+    "classes": [
+      "Normal",
+      "Pneumonia"
+    ],
+    "recommended_threshold": 0.4,
+    "preprocessing": "Resize to 224x224, normalize to [0,1]",
+    "inference_time": "~0.5 seconds per image",
+    "memory_usage": "~2GB GPU memory recommended"
+  },
+  "clinical_notes": {
+    "suitable_for": "Pneumonia screening, emergency triage",
+    "requires": "Human confirmation due to false positives",
+    "optimal_use": "First-line screening tool"
+  },
+  "disclaimers": [
+    "This model is for research/screening purposes only",
+    "NOT approved for clinical diagnosis without physician review",
+    "High false positive rate requires human confirmation",
+    "Performance may vary on different X-ray equipment/populations",
+    "Continuous monitoring and retraining recommended"
+  ],
+  "status": "Ready for Flask integration and pilot testing"
+}

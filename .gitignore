@@ -1,0 +1,51 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+*.log
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Model files (large files) - exclude all models but keep directory structure
+*.h5
+*.pkl
+models/*.h5
+models/*.pkl
+!models/README.md
+
+# Dataset files (large) - user will add their own
+datasets/
+*_binary_dataset/
+temp_binary_dataset/
+
+# Training artifacts and notebooks
+training_history.pkl
+enhanced_training_history.pkl
+*.ipynb
+
+# System files
+.DS_Store
+Thumbs.db
+*.sqlite3
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+static/*.jpeg
+static/*.jpg
+static/*.png
+!static/.gitkeep
+
+# Log files
+*.log
+logs/   
