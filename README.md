@@ -1,4 +1,4 @@
-# � COVID-19 & Pneumonia Detection System
+# 🦠 COVID-19 & Pneumonia Detection System
 
 An AI-powered medical imaging system for detecting COVID-19 and pneumonia from chest X-ray images.
 
@@ -122,7 +122,7 @@ xray-classifier/
 └── README.md                           # Project documentation
 ```
 
-## � API Usage
+## 🔗 API Usage
 
 ### Prediction Endpoint
 ```http
@@ -158,7 +158,7 @@ GET /health
 - **Viral Pneumonia**: Immediate medical consultation for antiviral treatment
 - **COVID+**: Immediate isolation and contact healthcare professionals
 
-## � Technical Specifications
+## ⚙️ Technical Specifications
 
 - **Backend**: Flask (Python)
 - **AI Model**: Deep Convolutional Neural Network
@@ -167,7 +167,7 @@ GET /health
 - **Framework**: TensorFlow/Keras
 - **Parameters**: 15,305,027 total parameters
 
-## �️ Safety Features
+## 🛡️ Safety Features
 
 ✅ Input validation and sanitization  
 ✅ File size limits (5MB max)  
