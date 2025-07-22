@@ -253,9 +253,4 @@ if __name__ == '__main__':
     print(f"\n🏥 Medical Disclaimer: This tool is for screening purposes only.")
     print(f"   Always consult healthcare professionals for medical diagnosis.\n")
     
-    # For local development
-    if __name__ == "__main__":
-        app.run(debug=True, host='0.0.0.0', port=5000)
-
-# For Vercel deployment
-app = app
+    app.run(debug=True, host='0.0.0.0', port=5000)
