@@ -22,7 +22,7 @@ try:
     # Try to load the available model
     model_paths = [
         'models/pneumonia_detector_complete.h5',
-        'models/Covid.h5',
+        'models/Covid2.h5',
         'models/pneumonia_model.h5'
     ]
     

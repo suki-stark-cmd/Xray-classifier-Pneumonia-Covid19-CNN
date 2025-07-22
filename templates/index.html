@@ -480,7 +480,7 @@
         <div class="header">
             <i class="fas fa-user-md medical-icon"></i>
             <h1>AI X-Ray Classifier</h1>
-            <p>Advanced pneumonia detection using artificial intelligence</p>
+            <p>Advanced COVID-19 & Pneumonia detection using artificial intelligence</p>
         </div>
 
         <div class="main-content">
@@ -551,6 +551,9 @@
                     <button class="tab" onclick="showTab('symptoms')">
                         <i class="fas fa-lungs"></i> Symptoms
                     </button>
+                    <button class="tab" onclick="showTab('covid')">
+                        <i class="fas fa-virus"></i> COVID-19
+                    </button>
                     <button class="tab" onclick="showTab('prevention')">
                         <i class="fas fa-shield-alt"></i> Prevention
                     </button>
@@ -559,39 +562,45 @@
                 <!-- About Tab -->
                 <div id="about" class="tab-content active">
                     <div class="info-section">
-                        <h3><i class="fas fa-disease"></i> What is Pneumonia?</h3>
-                        <p>Pneumonia is an infection that inflames air sacs in one or both lungs. The air sacs may fill with fluid or pus, causing cough with phlegm or pus, fever, chills, and difficulty breathing.</p>
+                        <h3><i class="fas fa-disease"></i> What We Detect</h3>
+                        <p>Our AI system analyzes chest X-rays to detect three conditions:</p>
+                        <ul>
+                            <li><strong>Normal:</strong> No signs of infection or disease</li>
+                            <li><strong>Viral Pneumonia:</strong> Lung infection caused by viruses</li>
+                            <li><strong>COVID-19:</strong> SARS-CoV-2 coronavirus infection patterns</li>
+                        </ul>
                         
                         <div class="stats-grid">
                             <div class="stat-card">
-                                <div class="stat-number">2.6M</div>
-                                <div class="stat-label">Deaths annually worldwide</div>
+                                <div class="stat-number">95%</div>
+                                <div class="stat-label">AI Model Accuracy</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-number">450M</div>
-                                <div class="stat-label">People affected yearly</div>
+                                <div class="stat-number">21K+</div>
+                                <div class="stat-label">Training Images</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="info-section">
-                        <h3><i class="fas fa-virus"></i> Types of Pneumonia</h3>
+                        <h3><i class="fas fa-brain"></i> AI Technology</h3>
+                        <p>Our deep learning model uses advanced VGG16 transfer learning to identify:</p>
                         <ul>
-                            <li><strong>Bacterial:</strong> Most common type, often caused by Streptococcus pneumoniae</li>
-                            <li><strong>Viral:</strong> Caused by viruses like influenza or COVID-19</li>
-                            <li><strong>Fungal:</strong> Less common, affects people with weakened immune systems</li>
-                            <li><strong>Aspiration:</strong> Caused by inhaling food, drink, or saliva</li>
+                            <li>Ground-glass opacities (COVID-19 patterns)</li>
+                            <li>Consolidation and infiltrates (pneumonia)</li>
+                            <li>Lung opacity variations and density changes</li>
+                            <li>Inflammatory patterns in lung tissue</li>
                         </ul>
                     </div>
 
                     <div class="info-section">
-                        <h3><i class="fas fa-x-ray"></i> How AI Helps</h3>
-                        <p>Our AI model analyzes chest X-rays to detect signs of pneumonia by identifying:</p>
+                        <h3><i class="fas fa-x-ray"></i> How It Works</h3>
+                        <p>Upload a chest X-ray image and our AI will:</p>
                         <ul>
-                            <li>Lung opacity and consolidation patterns</li>
-                            <li>Inflammatory changes in lung tissue</li>
-                            <li>Fluid accumulation in air sacs</li>
-                            <li>Abnormal density variations</li>
+                            <li>Analyze the image using 15.3M neural network parameters</li>
+                            <li>Compare patterns against trained medical knowledge</li>
+                            <li>Provide classification with confidence score</li>
+                            <li>Offer appropriate medical guidance</li>
                         </ul>
                     </div>
                 </div>
@@ -599,7 +608,7 @@
                 <!-- Symptoms Tab -->
                 <div id="symptoms" class="tab-content">
                     <div class="info-section">
-                        <h3><i class="fas fa-thermometer-half"></i> Common Symptoms</h3>
+                        <h3><i class="fas fa-thermometer-half"></i> Pneumonia Symptoms</h3>
                         
                         <div class="severity-indicator severity-high">
                             <i class="fas fa-exclamation-triangle"></i>
@@ -627,7 +636,7 @@
                     </div>
 
                     <div class="info-section">
-                        <h3><i class="fas fa-users"></i> Risk Groups</h3>
+                        <h3><i class="fas fa-users"></i> High-Risk Groups</h3>
                         <ul>
                             <li>Adults over 65 years old</li>
                             <li>Children under 2 years old</li>
@@ -650,15 +659,66 @@
                     </div>
                 </div>
 
+                <!-- COVID-19 Tab -->
+                <div id="covid" class="tab-content">
+                    <div class="info-section">
+                        <h3><i class="fas fa-virus"></i> COVID-19 Detection</h3>
+                        <p>Our AI can identify COVID-19 patterns in chest X-rays, including:</p>
+                        <ul>
+                            <li><strong>Ground-glass opacities:</strong> Hazy areas in lung tissue</li>
+                            <li><strong>Bilateral infiltrates:</strong> Infection affecting both lungs</li>
+                            <li><strong>Peripheral distribution:</strong> Changes mainly at lung edges</li>
+                            <li><strong>Lower lobe predominance:</strong> More common in lower lung areas</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-symptoms"></i> COVID-19 vs Pneumonia</h3>
+                        <div class="severity-indicator severity-high">
+                            <i class="fas fa-virus"></i>
+                            <div>
+                                <strong>COVID-19 Patterns:</strong>
+                                <p>Ground-glass opacities, bilateral distribution, peripheral location</p>
+                            </div>
+                        </div>
+
+                        <div class="severity-indicator severity-medium">
+                            <i class="fas fa-lungs"></i>
+                            <div>
+                                <strong>Viral Pneumonia:</strong>
+                                <p>Interstitial patterns, patchy infiltrates, variable distribution</p>
+                            </div>
+                        </div>
+
+                        <div class="severity-indicator severity-low">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Normal:</strong>
+                                <p>Clear lung fields, normal heart size, no opacities</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Important Notes</h3>
+                        <ul>
+                            <li>Early COVID-19 may show normal chest X-rays</li>
+                            <li>CT scans are more sensitive than X-rays for COVID-19</li>
+                            <li>Clinical symptoms and RT-PCR tests remain the gold standard</li>
+                            <li>This AI tool assists but doesn't replace medical diagnosis</li>
+                        </ul>
+                    </div>
+                </div>
+
                 <!-- Prevention Tab -->
                 <div id="prevention" class="tab-content">
                     <div class="info-section">
                         <h3><i class="fas fa-syringe"></i> Vaccination</h3>
                         <p><strong>Get vaccinated against:</strong></p>
                         <ul>
+                            <li>COVID-19 (including boosters as recommended)</li>
                             <li>Pneumococcal pneumonia (recommended for adults 65+)</li>
                             <li>Influenza (annual vaccination)</li>
-                            <li>COVID-19 (including boosters)</li>
                             <li>Haemophilus influenzae type b (Hib)</li>
                         </ul>
                     </div>
@@ -701,11 +761,11 @@
 
         <div class="disclaimer">
             <h4><i class="fas fa-exclamation-triangle"></i> Important Medical Disclaimer</h4>
-            <p>This AI tool is for educational and screening purposes only. It should not replace professional medical diagnosis or treatment. Always consult with qualified healthcare professionals for proper medical evaluation and care. If you're experiencing symptoms, seek immediate medical attention.</p>
+            <p>This AI tool is for educational and screening purposes only. It should not replace professional medical diagnosis or treatment. For COVID-19 detection, clinical symptoms and RT-PCR testing remain the gold standard. Always consult with qualified healthcare professionals for proper medical evaluation and care. If you're experiencing symptoms, seek immediate medical attention.</p>
         </div>
 
         <div class="footer">
-            <p><i class="fas fa-info-circle"></i> Powered by advanced deep learning algorithms trained on thousands of chest X-ray images.</p>
+            <p><i class="fas fa-info-circle"></i> Powered by VGG16 transfer learning trained on 21,000+ chest X-ray images for COVID-19, pneumonia, and normal classification.</p>
         </div>
     </div>
 

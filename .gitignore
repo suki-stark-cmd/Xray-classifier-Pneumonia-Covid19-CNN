@@ -34,9 +34,6 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
-static/*.jpeg
-static/*.jpg
-static/*.png
 !static/.gitkeep
 
 # Log files
